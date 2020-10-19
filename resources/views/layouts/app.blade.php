@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -191,24 +191,24 @@
     </main>
 </div>
 
-<script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
     var receiver_id = '';
     var my_id = "{{ Auth::id() }}";
     $(document).ready(function () {
-        // ajax setup form csrf token
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        // Enable pusher logging - don't include this in production
+        
         Pusher.logToConsole = true;
-        var pusher = new Pusher('048dbf3a75ead0b8b501', {
+        var pusher = new Pusher('f756597104ff77e403d2', {
             cluster: 'eu',
-            forceTLS: false
+            forceTLS: true
         });
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function (data) {
@@ -237,7 +237,7 @@
             receiver_id = $(this).attr('id');
             $.ajax({
                 type: "get",
-                url: "message/" + receiver_id, 
+                url: "message/" + receiver_id, // need to create this route
                 data: "",
                 cache: false,
                 success: function (data) {
@@ -248,30 +248,31 @@
         });
         $(document).on('keyup', '.input-text input', function (e) {
             var message = $(this).val();
-            // check if enter key is pressed and message is not null also receiver is selected
+            
             if (e.keyCode == 13 && message != '' && receiver_id != '') {
-                $(this).val(''); // while pressed enter text box will be empty
+                $(this).val(''); 
                 var datastr = "receiver_id=" + receiver_id + "&message=" + message;
-        
                 $.ajax({
                     type: "post",
                     url: "message", 
                     data: datastr,
                     cache: false,
                     success: function (data) {
-                   
+                        //console.log(JSON.stringify(data));
                     },
                     error: function (xhr, status, err) {
-                     
+                        //console.log(JSON.stringify(err));
                     },
-                    complete: function () {
+                    complete: function (xhr) {
+                      //  alert(xhr.responseText);
                         scrollToBottomFunc();
                     }
                 })
             }
         });
     });
-    // make a function to scroll down auto
+    
+
     function scrollToBottomFunc() {
         $('.message-wrapper').animate({
             scrollTop: $('.message-wrapper').get(0).scrollHeight

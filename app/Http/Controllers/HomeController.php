@@ -28,10 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // select all users except logged in user
-        //  $users = User::where('id','!=',Auth::id())->get();
-       
-        // count how many message are unread from the selected user
+        
         $users = DB::select("select users.id, users.name, users.avatar, users.email, count(is_read) as unread 
         from users LEFT  JOIN  messages ON users.id = messages.from and is_read = 0 and messages.to = " . Auth::id() . "
         where users.id != " . Auth::id() . " 
@@ -45,10 +42,10 @@ class HomeController extends Controller
     {
         $my_id = Auth::id();
 
-        // Make read all unread message
+        
          Message::where(['from' => $user_id, 'to' => $my_id])->update(['is_read' => 1]);
 
-        // Get all message from selected user
+        
         $messages = Message::where(function ($query) use ($user_id, $my_id) {
             $query->where('from', $user_id)->where('to', $my_id);
         })->oRwhere(function ($query) use ($user_id, $my_id) {
@@ -58,8 +55,11 @@ class HomeController extends Controller
         return view('messages.index', ['messages' => $messages]);
     }
 
+
+
     public function sendMessage(Request $request)
     {
+      
         $from = Auth::id();
         $to = $request->receiver_id;
         $message = $request->message;
@@ -68,7 +68,7 @@ class HomeController extends Controller
         $data->from = $from;
         $data->to = $to;
         $data->message = $message;
-        $data->is_read = 0; // message will be unread when sending message
+        $data->is_read = 0; 
         $data->save();
 
         // pusher
@@ -84,7 +84,7 @@ class HomeController extends Controller
             $options
         );
 
-        $data = ['from' => $from, 'to' => $to]; // sending from and to user id when pressed enter
-        $pusher->trigger('my-channel', 'my-event', $data);
+       return $data = ['from' => $from, 'to' => $to]; 
+         $pusher->trigger('my-channel', 'MessageSent', $data);
     }
 }
