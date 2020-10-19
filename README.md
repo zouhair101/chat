@@ -1,9 +1,6 @@
-# laravel-chat
-
-Build a chat app with Laravel, Vue.js and Pusher. Follow the tutorial [https://pusher.com/tutorials/chat-laravel](https://pusher.com/tutorials/chat-laravel)
-
-## Getting Started
-
+## Introduction
+Cette application a pour l'objet de créer un system de chat avec laravel ,jquery et Pusher qui est un service hébergé qui permet d'ajouter des données et des fonctionnalités en temps réel aux applications Web et mobiles sans oublier que c'est payant ça dépend la frequence d'utilisation, pour cela l'admin de cette application a un tableau de bord qui montre la consomation du serveur.
+## Commencer
 Clonez le reposiro du projet en exécutant la commande ci-dessous
 
 ```bash
